@@ -1,5 +1,10 @@
 ```
-  npm install tailwindcss @tailwindcss/vite    // vite + react 에 대응하는 tailwindcss
+npm i tailwindcss @tailwindcss/vite  // vite + react 에 대응하는 tailwindcss
+npm i react-router-dom               // 페이지 편집
+npm i axios                          // API 연결
+npm i antd                           // 모달창 css
+npm i flowbite                       // flowbite (tailwindcss로 만들어진 css)
+npm i react-js-pagination            // react 페이지 네이션
 ```
 
 # React + Vite
