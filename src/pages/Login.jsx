@@ -1,17 +1,38 @@
 import {useNavigate, Link} from 'react-router-dom';
-
+import axios from 'axios';
+import { useState } from 'react';
 
 // 초기 로그인 페이지
 const Login = () => {
 
     // 변수 선언
     const navigate = useNavigate();
+    const [userId, setUserId] = useState('');
+    const [password, setPassword] = useState('');
 
-    const handleMain = () => {
+    const logincheck = async () => {
+        await axios
+        .post("/user/login", {
+            userid: userId,
+            userpw: password,
+        })
+        .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        alert(JSON.stringify(response.data));
+        })
+        .catch((err) => {
+        alert(err);
+        });
+
+    };
+
+    const handleMain = (event) => {
+        event.preventDefault();
+        // alert("실행됨");
         // 아이디 비밀번호 API 작성
-
+        logincheck();
         // 최종적으로 확인 후 메인보내기
-        navigate("/main");
+        // navigate("/main");
     }
 
 
@@ -26,12 +47,12 @@ const Login = () => {
                         <div className='lg:w-96 m-auto'>
                             <div class="mb-5">
                                 <label for="input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">아이디</label>
-                                <input type="input" id="userId" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                <input type="input" id="userId" onChange={(e) => setUserId(e.target.value)} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder="아이디를 입력하세요" required />
                             </div>
                             <div class="mb-5">
                                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">비밀번호</label>
-                                <input type="password" id="password" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                <input type="password" id="password" onChange={(e) => setPassword(e.target.value)} class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                     placeholder='비밀번호를 입력하세요' required />
                             </div>
                             <div class="flex items-start mb-5">
