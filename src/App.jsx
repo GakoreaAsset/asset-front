@@ -30,6 +30,7 @@ export default function App() {
             <Route path="asset" element={<AssetList />} />
             <Route path="asset/add" element={<AssetAdd />} />
             <Route path="asset/modify/:num" element={<AssetModify />} />
+            
           </Route>
         </Routes>
       </BrowserRouter>

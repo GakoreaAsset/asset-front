@@ -1,7 +1,26 @@
+import { useState } from "react";
 
 
 const AssetAdd = () => {
+  // 변수 선언
+  const {num} = useParams();
+  const [itemdcd, setItemdcd] = useState("PC");
+  const [astate, setAstate] = useState();
+  const [acorpcd, setAcorpcd] = useState();
+  const [aplace, setAplace] = useState();
 
+  // 렌더링 부분
+  useEffect(() => {
+    console.log(num);
+  }, []);
+
+  // Axios 요청부분
+
+  // 함수 부분
+  const handleItemdcd = (e) =>{
+    setItemdcd(e);
+    // console.log(e);
+  }
 
 
 
@@ -11,8 +30,8 @@ const AssetAdd = () => {
             <tr>
               <td>자산분류코드</td>
               <td>
-                <select name="itemdcd">
-                  <option value="PC" selected>PC</option>
+                <select name="itemdcd" defaultValue={itemdcd} onChange={(e) => {handleItemdcd(e.target.value)}}>
+                  <option value="PC">PC</option>
                   <option value="모니터">모니터</option>
                   <option value="노트북">노트북</option>
                   <option value="외장HDD">외장HDD</option>
