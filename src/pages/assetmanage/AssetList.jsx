@@ -1,19 +1,23 @@
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Pagination from "react-js-pagination";
 import { useNavigate, Link } from 'react-router-dom';
+import { GlobalMenu } from '../main/GlobalMenu';
 
 
 const AssetList = () => {
   // 변수 선언
+  const { globalMenuval, setGlobalMenuval } = useContext(GlobalMenu);
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [aslist, setAslist] = useState();
   const [asdata, setAsdata] = useState();
-  const navigate = useNavigate();
-  const [search, setSearch] = useState("사용자");
+  const [search, setSearch] = useState({gubun : "", company : "", place : "", state : "", searchdetail : "사용자"});
 
+  // 렌더링 부분
   // 첫화면 등장시 숫자 카운트 및 화면 송출  
   useEffect(() => {
+    setGlobalMenuval("전산관리 - 전산자산관리");
     assetNum();
     assetList();
     // console.log(asdata);
@@ -24,10 +28,7 @@ const AssetList = () => {
     assetList();
   }, [page]);
 
-  // 로그인을 안하고 주소를 입력했을경우 허용하지 않는 함수 (기본 useEffect에 넣어줘야함)
-
-
-  // 자산페이지 확인
+  // Axios 요청부분
   const assetNum = async () => {
     await axios
       .get("/asset/pagenum", {})
@@ -56,52 +57,62 @@ const AssetList = () => {
       });
   }
 
-  // 페이지 변경 함수
+  // 함수 부분
+  // 자산페이지 변경 함수
   const handlePageChange = (page) => {
     setPage(page);
     // assetList();
   };
 
-  // 신규 등록 화면
+  // 검색 옵션 변경
+  const handleSearch = (key, value) => {
+    setSearch((prev) => ({ ...prev, [key]: value }));
+  };
+
+  // 자산 신규 등록화면 이동
   const handleAddbutton = () => {
     navigate('add');
   };
 
-  // 검색 옵션 변경
-  const handleSearch = (e) => {
-    setSearch(e.value);
-    console.log(search);
-  };
-
-  // 클릭시 싸이트 변경
+  // 자산상세보기 이동
   const handledetail = (e) => {
     navigate(`modify/${e}`);
   };
-  
+
+
   return (
-
     <>
-      {/* <div className=''>
-        <h2 className='pb-4'>전산자산관리</h2>
-      </div> */}
-
       <div>
         <table className="min-w-full border-collapse rounded-lg shadow-md">
           <thead>
             <tr className="bg-gray-50">
-              <th colSpan="2" className="p-2 text-sm font-medium text-left">상세 구분</th>
+              <th colSpan="2" className="p-2 font-bold  text-center">상세자산구분</th>
+              <th colSpan="2">
+                <select name="itemdcd" className="w-full border border-gray-300 rounded p-1 text-sm" onChange={(e) => handleSearch('gubun', e.target.value)} value={search.gubun}>
+                <option value="">전체</option>
+                <option value="PC">PC</option>
+                <option value="모니터">모니터</option>
+                <option value="노트북">노트북</option>
+                <option value="외장HDD">외장HDD</option>
+                <option value="키오스크">키오스크</option>
+                <option value="임대">임대</option>
+                <option value="프린터">프린터</option>
+                <option value="랜카드">랜카드</option>
+                <option value="공유기">공유기</option>
+                <option value="네트워크장비">네트워크장비</option>
+                <option value="렉">렉</option>
+                <option value="기타">기타</option>
+              </select>
+              </th>
+              <th className="font-bold text-center px-2">회사</th>
               <th colSpan="2">
                 <input type="text" className="w-full border border-gray-300 rounded p-1 text-sm" />
               </th>
-              <th className="text-sm font-medium text-center px-2">회사</th>
-              <th colSpan="2">
-                <input type="text" className="w-full border border-gray-300 rounded p-1 text-sm" />
-              </th>
-              <th className="text-sm font-medium text-center px-2">설치장소</th>
+              <th className="font-bold text-center px-2">설치장소</th>
               <th>
                 <input type="text" className="w-full border border-gray-300 rounded p-1 text-sm" />
               </th>
-              <th className="text font-medium text-center px-2">상태</th>
+              <th className="font-bold text-center px-2">상태</th>
               <th>
                 <input type="text" className="w-full border border-gray-300 rounded p-1 text-sm" />
               </th>
@@ -113,15 +124,11 @@ const AssetList = () => {
             </tr>
             <tr className="bg-gray-50">
               <th colSpan="5" className="p-2">
-                <select
-                  name="search"
-                  onChange={handleSearch}
-                  defaultValue="user"
-                  className="border border-gray-300 p-1 rounded text-sm w-full"
-                >
-                  <option value="user">사용자</option>
-                  <option value="number">자산번호</option>
-                  <option value="pname">자산명</option>
+                {/* <select name="search" onChange={(e) => handleSearch('searchdetail', e.target.value)} value={search.searchdetail} className="border border-gray-300 p-1 rounded text-sm w-full"> */}
+                <select name="search" onChange={(e) => handleSearch('searchdetail', e.target.value)} value={search.searchdetail} className="w-full text-center">
+                  <option value="사용자">사용자</option>
+                  <option value="자산번호">자산번호</option>
+                  <option value="자산명">자산명</option>
                 </select>
               </th>
               <th colSpan="6">
@@ -147,11 +154,7 @@ const AssetList = () => {
 
           <tbody className="text-sm">
             {asdata && asdata.map((data, i) => (
-              <tr
-                key={data.ano}
-                className="hover:bg-blue-50 border-b text-center cursor-pointer"
-                onClick={() => handledetail(data.ano)}
-              >
+              <tr key={data.ano} className="hover:bg-blue-50 border-b text-center cursor-pointer" onClick={() => handledetail(data.ano)} >
                 <td className="px-2 py-2">{i + 1}</td>
                 <td className="px-2 py-2">{data.item4nm}</td>
                 <td className="px-2 py-2">{data.ano}</td>
@@ -193,10 +196,6 @@ const AssetList = () => {
           </tfoot>
         </table>
       </div>
-
-
-
-
 
     </>
   );

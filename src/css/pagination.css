@@ -1,14 +1,14 @@
 .pagination {
-  width: 50%;
-  height: 5%;
+  width: 100%;
+  /* height: 100%; */
   display: flex; /* flex row 사용*/
   justify-content: center; /* 수평 중앙 정렬 */
   align-items: center; /* 수직 중앙 정렬 */
   margin-bottom: 0.5rem;
  
   li { /* Pagination 컴포넌트의 각 요소들은 li로 묶여있음(개발자 모드에서 실제 태그 구성을 확인해보자) */
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 1.8rem;
+    height: 1.8rem;
     border-radius: 50%;
     display: flex; /* flex 사용 */
     justify-content: center; /* 수평 중앙 정렬 */

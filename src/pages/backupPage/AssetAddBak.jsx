@@ -4,10 +4,7 @@ import { useState } from "react";
 const AssetAdd = () => {
   // 변수 선언
   const {num} = useParams();
-  const [itemdcd, setItemdcd] = useState("PC");
-  const [astate, setAstate] = useState();
-  const [acorpcd, setAcorpcd] = useState();
-  const [aplace, setAplace] = useState();
+  const [asitem, setAsitem] = useState({itemdcd : "PC",  acdid : "",  anm : "", });
 
   // 렌더링 부분
   useEffect(() => {
@@ -17,9 +14,9 @@ const AssetAdd = () => {
   // Axios 요청부분
 
   // 함수 부분
-  const handleItemdcd = (e) =>{
-    setItemdcd(e);
-    // console.log(e);
+  const handleAsitem = (key, value) =>{
+    setAsdetail((prev) => ({ ...prev, [key]: value }));
+    console.log(value);
   }
 
 
@@ -30,7 +27,7 @@ const AssetAdd = () => {
             <tr>
               <td>자산분류코드</td>
               <td>
-                <select name="itemdcd" defaultValue={itemdcd} onChange={(e) => {handleItemdcd(e.target.value)}}>
+                <select name="itemdcd" defaultValue={asitem.itemdcd} onChange={(e) => {handleAsitem('itemdcd', e.target.value)}}>
                   <option value="PC">PC</option>
                   <option value="모니터">모니터</option>
                   <option value="노트북">노트북</option>
@@ -49,7 +46,7 @@ const AssetAdd = () => {
             <tr>
               <td>자산번호</td>
               <td>
-                <input name="ano" value="" maxLength="8" size="8" readonly="true" id="inputfont" />
+                <input name="ano"  maxLength="8" size="8" readonly="true" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -57,7 +54,7 @@ const AssetAdd = () => {
                 자산코드
               </td>
               <td>
-                <input name="acdid" value="" maxLength="50" size="30" id="inputfont" />
+                <input name="acdid"  maxLength="50" size="30" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -65,7 +62,7 @@ const AssetAdd = () => {
                 자산명
               </td>
               <td>
-                <input name="anm" value="" maxLength="25" size="25" id="inputfont" />
+                <input name="anm"  maxLength="25" size="25" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -73,7 +70,7 @@ const AssetAdd = () => {
                 제조사
               </td>
               <td>
-                <input name="mcorp" value="" maxLength="10" size="10" id="inputfont"/>
+                <input name="mcorp"  maxLength="10" size="10" id="inputfont"/>
               </td>
             </tr>
             <tr>
@@ -81,7 +78,7 @@ const AssetAdd = () => {
                 제조년월
               </td>
               <td>
-                <input name="myear" value="" maxLength="8" size="8" id="inputfont" /> 
+                <input name="myear"  maxLength="8" size="8" id="inputfont" /> 
               </td>
             </tr>
             <tr>
@@ -123,7 +120,7 @@ const AssetAdd = () => {
               </td>
               <td>
                 <select name="aplace">
-                  <option value="">전체</option>
+                  <option >전체</option>
                   <option value="골드CC">골드CC</option>
                   <option value="코리아CC">코리아CC</option>
                   <option value="퍼블릭CC">퍼블릭CC</option>
@@ -142,7 +139,7 @@ const AssetAdd = () => {
                 귀속부서
               </td>
               <td>
-                <input name="apart" value="" maxLength="15" size="15" id="inputfont" />
+                <input name="apart"  maxLength="15" size="15" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -150,7 +147,7 @@ const AssetAdd = () => {
                 사용자
               </td>
               <td>
-                <input name="auser" value="" maxLength="15" size="15" id="inputfont" />
+                <input name="auser"  maxLength="15" size="15" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -166,7 +163,7 @@ const AssetAdd = () => {
                 속성1
               </td>
               <td>
-                <input name="attr1" value="" maxLength="50" size="50" id="inputfont" />
+                <input name="attr1"  maxLength="50" size="50" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -174,7 +171,7 @@ const AssetAdd = () => {
                 속성2
               </td>
               <td>
-                <input name="attr2" value="" maxLength="50" size="50" id="inputfont" />
+                <input name="attr2"  maxLength="50" size="50" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -182,7 +179,7 @@ const AssetAdd = () => {
                 속성3
               </td>
               <td>
-                <input name="attr3" value="" maxLength="50" size="50" id="inputfont" />
+                <input name="attr3"  maxLength="50" size="50" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -190,7 +187,7 @@ const AssetAdd = () => {
                 속성4
               </td>
               <td>
-                <input name="attr4" value="" maxLength="50" size="50" id="inputfont" />
+                <input name="attr4"  maxLength="50" size="50" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -198,7 +195,7 @@ const AssetAdd = () => {
                 속성5
               </td>
               <td>
-                <input name="attr5" value="" maxLength="50" size="50" id="inputfont" />
+                <input name="attr5"  maxLength="50" size="50" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -206,7 +203,7 @@ const AssetAdd = () => {
                 취득가액
               </td>
               <td>
-                <input name="price" value="" maxLength="10" size="8" id="inputfont" />
+                <input name="price"  maxLength="10" size="8" id="inputfont" />
               </td>
             </tr>
             <tr>
@@ -214,7 +211,7 @@ const AssetAdd = () => {
                 설치일자
               </td>
               <td>
-                <input name="iyear" value="" maxLength="8" size="8" id="inputfont" /> 
+                <input name="iyear"  maxLength="8" size="8" id="inputfont" /> 
                 <span></span> 
               </td>
             </tr>
