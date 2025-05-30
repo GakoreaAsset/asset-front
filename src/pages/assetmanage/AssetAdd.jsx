@@ -1,24 +1,59 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { GlobalMenu } from "../main/GlobalMenu";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
 const AssetAdd = () => {
   // 변수 선언
-  const [asitem, setAsitem] = useState({itemdcd : "PC",  acdid : "",  anm : "", mcorp : "", myear : "", astate :  "사용중", acorpcd : "기흥관광개발(주)", aplace : "골드CC", apart : "", auser : "", spec : "CPU: / RAM: / VGA: / SSD: / HDD:", attr1 : "", attr2 : "", attr3 : "", attr4 : "", attr5 : "", price : "", iyear : ""});
+  const { globalMenuval, setGlobalMenuval } = useContext(GlobalMenu);
+  const navigate = useNavigate();
+  const [asitem, setAsitem] = useState({itemdcd : "02",  acdid : "",  anm : "", mcorp : "", myear : "", astate :  "01", acorpcd : "01021000", aplace : "골드CC", apart : "", auser : "", spec : "CPU: / RAM: / VGA: / SSD: / HDD:", attr1 : "", attr2 : "", attr3 : "", attr4 : "", attr5 : "", price : "", iyear : "", regip : '""', regid : ''});
+
 
   // 렌더링 부분
   useEffect(() => {
-
+    setGlobalMenuval('전산관리 - 전산자산등록');
+    ipcheck();
   }, []);
 
   // Axios 요청부분
+  // 공인 IP확인
+  const ipcheck = async () => {
+  await axios
+      .get("https://api.ipify.org?format=json")
+      .then(response => {
+        const userIp = response.data.ip;
+        // console.log(userIp);
+        handleAsitem('regip', userIp);
+      })
+      .catch(error => {
+        console.error("IP 가져오기 실패:", error);
+      });
+  }
 
+  // 신규등록
+  const assetadd  = async () => {
+  await axios
+    .post("/asset/add",
+      asitem
+    )
+    .then((response) => {
+      // console.log(JSON.stringify(response.data));
+      // console.log(response.data);
+
+      navigate('/main/asset');
+    })
+    .catch((err) => {
+      alert(err);
+    });
+  }
+  
   // 함수 부분
   const handleAsitem = (key, value) =>{
     setAsitem((prev) => ({ ...prev, [key]: value }));
     console.log(value);
   }
-
-
 
     return (
         <>
@@ -27,19 +62,20 @@ const AssetAdd = () => {
 
             <div>
               <label className="block font-semibold mb-1">자산분류코드</label>
-              <select name="itemdcd" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('item4nm', e.target.value)} value={asitem.item4nm}>
-                <option value="PC">PC</option>
-                <option value="모니터">모니터</option>
-                <option value="노트북">노트북</option>
-                <option value="외장HDD">외장HDD</option>
-                <option value="키오스크">키오스크</option>
-                <option value="임대">임대</option>
-                <option value="프린터">프린터</option>
-                <option value="랜카드">랜카드</option>
-                <option value="공유기">공유기</option>
-                <option value="네트워크장비">네트워크장비</option>
-                <option value="렉">렉</option>
-                <option value="기타">기타</option>
+              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('item4nm', e.target.value)} value={asitem.item4nm}>
+                <option value="02">PC</option>
+                <option value="03">모니터</option>
+                <option value="31">노트북</option>
+                <option value="30">외장HDD</option>
+                <option value="01">서버</option>
+                <option value="05">키오스크</option>
+                <option value="10">임대</option>
+                <option value="04">프린터</option>
+                <option value="18">랜카드</option>
+                <option value="07">공유기</option>
+                <option value="06">네트워크장비</option>
+                <option value="32">렉</option>
+                <option value="29">기타</option>
               </select>
             </div>
 
@@ -66,24 +102,24 @@ const AssetAdd = () => {
             <div>
               <label className="block font-semibold mb-1">자산상태</label>
               <select name="astate" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('statenm', e.target.value)} value={asitem.statenm} >
-                <option value="사용중">사용중</option>
-                <option value="보유">보유</option>
-                <option value="폐기">폐기</option>
-                <option value="분출">분출</option>
-                <option value="A/S">A/S</option>
-                <option value="분실">분실</option>
-                <option value="만료">만료</option>
+                <option value="01">사용중</option>
+                <option value="02">보유</option>
+                <option value="06">폐기</option>
+                <option value="04">분출</option>
+                <option value="05">A/S</option>
+                <option value="08">분실</option>
+                <option value="09">만료</option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold mb-1">회사</label>
-              <select name="acorpcd" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('conm', e.target.value)} value={asitem.conm}>
-                <option value="기흥관광개발(주)">기흥관광개발(주)</option>
-                <option value="뉴경기관광(주)">뉴경기관광(주)</option>
-                <option value="(주)지에이코리아">(주)지에이코리아</option>
-                <option value="(주)강호개발">(주)강호개발</option>
-                <option value="영농회사법인 그린팜주식회사">영농회사법인 그린팜주식회사</option>
+              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('acorpcd', e.target.value)} value={asitem.acorpcd}>
+                <option value="01021000">기흥관광개발(주)</option>
+                <option value="01031000">뉴경기관광(주)</option>
+                <option value="01041000">(주)지에이코리아</option>
+                <option value="01071000">(주)강호개발</option>
+                <option value="01091000">영농회사법인 그린팜주식회사</option>
                 {/* <option value="주식회사 지엠씨">주식회사 지엠씨</option> */}
                 {/* <option value="(주)유성 본점">(주)유성 본점</option> */}
                 {/* <option value="와이에스인베스트먼트(주)">와이에스인베스트먼트(주)</option> */}
@@ -146,8 +182,8 @@ const AssetAdd = () => {
 
           <div className="flex flex-wrap justify-between mt-8 gap-4">
             <div className="flex gap-4">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">저장</button>
-              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">목록</button>
+              <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" onClick={assetadd} >저장</button>
+              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600" >목록</button>
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ import { GlobalMenu } from './pages/main/GlobalMenu.jsx';
 
 export default function App() {
   // 스프링부트 vscode 실행방법 터미널 -> ./gradlew bootRun
+  // 스윗얼럿2 사용방법 https://sweetalert2.github.io/#usage 설치 npm i sweetalert2
   // 기본 axios url 설정
   axios.defaults.baseURL = 'http://localhost:8080/api/v1';
   

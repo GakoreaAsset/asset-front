@@ -1,12 +1,14 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { GlobalMenu } from "../main/GlobalMenu";
+import Swal from "sweetalert2";
 
 
 const AssetModify = () => {
   // 변수 선언
   const { globalMenuval, setGlobalMenuval } = useContext(GlobalMenu);
+  const navigate = useNavigate();
   const {num} = useParams();
   const [asdetail, setAsdetail] = useState();
 
@@ -14,6 +16,7 @@ const AssetModify = () => {
   useEffect(() => {
     setGlobalMenuval("전산관리 - 전산자산상세보기(수정)");
     assetdetail();
+    ipcheck();
     // console.log(asdetail);
   }, []);
 
@@ -40,13 +43,43 @@ const AssetModify = () => {
       });
   }
 
-  // 함수 부분
-  const handleAsdetail = (key, value) =>{
-    setAsdetail((prev) => ({ ...prev, [key]: value }));
-    // console.log(value);
+  // 공인 IP확인
+  const ipcheck = async () => {
+  await axios
+      .get("https://api.ipify.org?format=json")
+      .then(response => {
+        const userIp = response.data.ip;
+        // console.log(userIp);
+        handleAsdetail('regip', userIp);
+      })
+      .catch(error => {
+        console.error("IP 가져오기 실패:", error);
+      });
+  }
+
+  // 업데이트등록
+  const assetmodify  = async () => {
+  await axios
+    .post("/asset/modify",
+      asdetail
+    )
+    .then((response) => {
+      // console.log(JSON.stringify(response.data));
+      // console.log(response.data);
+      Swal.fire({ title: "수정완료 되었습니다", icon: "success", draggable: true });
+      navigate('/main/asset');
+    })
+    .catch((err) => {
+      alert(err);
+    });
   }
 
 
+  // 함수 부분
+  const handleAsdetail = (key, value) =>{
+    setAsdetail((prev) => ({ ...prev, [key]: value }));
+    console.log(value);
+  }
 
   return (
     <>
@@ -55,29 +88,30 @@ const AssetModify = () => {
           <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6">
 
             <div>
-              <label className="block font-semibold mb-1">자산분류코드</label>
-              <div className="flex align-middle justify-center items-center border rounded">
-                <select name="itemdcd" className="w-full px-3 py-2" onChange={(e) => handleAsdetail('item4nm', e.target.value)} value={asdetail.item4nm}>
-                  <option value="PC">PC</option>
-                  <option value="모니터">모니터</option>
-                  <option value="노트북">노트북</option>
-                  <option value="외장HDD">외장HDD</option>
-                  <option value="키오스크">키오스크</option>
-                  <option value="임대">임대</option>
-                  <option value="프린터">프린터</option>
-                  <option value="랜카드">랜카드</option>
-                  <option value="공유기">공유기</option>
-                  <option value="네트워크장비">네트워크장비</option>
-                  <option value="렉">렉</option>
-                  <option value="기타">기타</option>
-                </select>
-                <span className="align-middle justify-center items-center px-2 text-2xl text-gray-500">{asdetail.item4cd}</span>
-              </div>
+              <label className="block font-semibold mb-1">자산번호</label>
+              <div className="border px-3 py-2 rounded bg-gray-50">{num}</div>
             </div>
 
             <div>
-              <label className="block font-semibold mb-1">자산번호</label>
-              <div className="border px-3 py-2 rounded bg-gray-50">{num}</div>
+              <label className="block font-semibold mb-1">자산분류코드</label>
+              <div className="flex align-middle justify-center items-center border rounded">
+                <select name="itemdcd" className="w-full px-3 py-2" onChange={(e) => handleAsdetail('itemdcd', e.target.value)} value={asdetail.itemdcd}>
+                  <option value="02">PC</option>
+                  <option value="03">모니터</option>
+                  <option value="31">노트북</option>
+                  <option value="30">외장HDD</option>
+                  <option value="01">서버</option>
+                  <option value="05">키오스크</option>
+                  <option value="10">임대</option>
+                  <option value="04">프린터</option>
+                  <option value="18">랜카드</option>
+                  <option value="07">공유기</option>
+                  <option value="06">네트워크장비</option>
+                  <option value="32">렉</option>
+                  <option value="29">기타</option>
+                </select>
+                <span className="align-middle justify-center items-center px-2 text-2xl text-gray-500">{asdetail.item4cd}</span>
+              </div>
             </div>
 
             <div>
@@ -102,25 +136,25 @@ const AssetModify = () => {
 
             <div>
               <label className="block font-semibold mb-1">자산상태</label>
-              <select name="astate" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('statenm', e.target.value)} value={asdetail.statenm} >
-                <option value="사용중">사용중</option>
-                <option value="보유">보유</option>
-                <option value="폐기">폐기</option>
-                <option value="분출">분출</option>
-                <option value="A/S">A/S</option>
-                <option value="분실">분실</option>
-                <option value="만료">만료</option>
+              <select name="astate" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('astate', e.target.value)} value={asdetail.astate} >
+                <option value="01">사용중</option>
+                <option value="02">보유</option>
+                <option value="06">폐기</option>
+                <option value="04">분출</option>
+                <option value="05">A/S</option>
+                <option value="08">분실</option>
+                <option value="09">만료</option>
               </select>
             </div>
 
             <div>
               <label className="block font-semibold mb-1">회사</label>
-              <select name="acorpcd" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('conm', e.target.value)} value={asdetail.conm}>
-                <option value="기흥관광개발(주)">기흥관광개발(주)</option>
-                <option value="뉴경기관광(주)">뉴경기관광(주)</option>
-                <option value="(주)지에이코리아">(주)지에이코리아</option>
-                <option value="(주)강호개발">(주)강호개발</option>
-                <option value="영농회사법인 그린팜주식회사">영농회사법인 그린팜주식회사</option>
+              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('acorpcd', e.target.value)} value={asdetail.acorpcd}>
+                <option value="01021000">기흥관광개발(주)</option>
+                <option value="01031000">뉴경기관광(주)</option>
+                <option value="01041000">(주)지에이코리아</option>
+                <option value="01071000">(주)강호개발</option>
+                <option value="01091000">영농회사법인 그린팜주식회사</option>
                 {/* <option value="주식회사 지엠씨">주식회사 지엠씨</option> */}
                 {/* <option value="(주)유성 본점">(주)유성 본점</option> */}
                 {/* <option value="와이에스인베스트먼트(주)">와이에스인베스트먼트(주)</option> */}
@@ -169,7 +203,8 @@ const AssetModify = () => {
             <div>
               <label className="block font-semibold mb-1">취득가액</label>
               <div className="flex items-center border px-3 py-2 rounded bg-gray-50">
-                {asdetail.price} <span className="ml-2 text-gray-500">원</span>
+                <input maxLength="100" className="" onChange={(e) => handleAsdetail('price', e.target.value)} value={asdetail.price} />
+                <span className="ml-2 text-gray-500 text-right">원</span>
               </div>
             </div>
 
@@ -181,7 +216,7 @@ const AssetModify = () => {
 
             <div className="col-span-1 md:col-span-3">
               <label className="inline-flex items-center">
-                <input type="checkbox" className="mr-2" />
+                <input type="checkbox" className="mr-2" onChange={(e) => handleAsdetail('update', e.target.checked)}/>
                 체크 시 자산이력 등록
               </label>
             </div>
@@ -189,7 +224,7 @@ const AssetModify = () => {
 
           <div className="flex flex-wrap justify-between mt-8 gap-4">
             <div className="flex gap-4">
-              <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">저장</button>
+              <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" onClick={assetmodify} >저장</button>
               <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">목록</button>
             </div>
             <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">이력조회</button>
