@@ -1,27 +1,34 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { GlobalMenu } from "../main/GlobalMenu";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
+import { GlobalContext } from "../main/GlobalContext";
 import Swal from "sweetalert2";
 
 
 const AssetModify = () => {
   // 변수 선언
-  const { globalMenuval, setGlobalMenuval } = useContext(GlobalMenu);
+  const { selectedMenu, setSelectedMenu } = useContext(GlobalContext);
+  const { onClose } = useOutletContext();
   const navigate = useNavigate();
   const {num} = useParams();
   const [asdetail, setAsdetail] = useState();
+  const [pirce, setPrice] = useState('0');
 
   // 렌더링 부분
   useEffect(() => {
-    setGlobalMenuval("전산관리 - 전산자산상세보기(수정)");
-    assetdetail();
+    setSelectedMenu("전산상세보기");
     ipcheck();
     // console.log(asdetail);
   }, []);
 
   useEffect(() => {
+    assetdetail();
+  }, [num]);
 
+  useEffect(() => {
+    // if (asdetail.price && !isNaN(Number(asdetail.price))) {
+    //   setPrice(asdetail.price.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+    // }
   }, [asdetail]);
 
   // Axios 요청부분
@@ -33,10 +40,10 @@ const AssetModify = () => {
       })
       .then((response) => {
         // console.log(JSON.stringify(response.data));
-        console.log(response.data);
+        // console.log(response.data);
         setAsdetail(response.data);
-        // setItemdcd(response.data.item4nm);
-        // setAstate(response.data.statenm);
+        // 원단위 표현
+        setPrice(response.data.price.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
       })
       .catch((err) => {
         alert(err);
@@ -74,12 +81,13 @@ const AssetModify = () => {
     });
   }
 
-
   // 함수 부분
   const handleAsdetail = (key, value) =>{
     setAsdetail((prev) => ({ ...prev, [key]: value }));
-    console.log(value);
+    // console.log(value);
   }
+
+
 
   return (
     <>
@@ -200,10 +208,10 @@ const AssetModify = () => {
               </div>
             ))}
 
-            <div>
-              <label className="block font-semibold mb-1">취득가액</label>
+            <div className="">
+              <label className="block  font-semibold mb-1">취득가액</label>
               <div className="flex items-center border px-3 py-2 rounded bg-gray-50">
-                <input maxLength="100" className="" onChange={(e) => handleAsdetail('price', e.target.value)} value={asdetail.price} />
+                <input maxLength="100" className="text-right w-full" onChange={(e) => handleAsdetail('price', e.target.value)} value={asdetail.price} />
                 <span className="ml-2 text-gray-500 text-right">원</span>
               </div>
             </div>
@@ -225,7 +233,7 @@ const AssetModify = () => {
           <div className="flex flex-wrap justify-between mt-8 gap-4">
             <div className="flex gap-4">
               <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" onClick={assetmodify} >저장</button>
-              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">목록</button>
+              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600" onClick={onClose}>닫기</button>
             </div>
             <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">이력조회</button>
           </div>

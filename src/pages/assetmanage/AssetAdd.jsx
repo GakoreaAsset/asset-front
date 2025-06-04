@@ -1,19 +1,20 @@
 import { useContext, useEffect, useState } from "react";
-import { GlobalMenu } from "../main/GlobalMenu";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
-
+import { GlobalContext } from "../main/GlobalContext";
+import Swal from "sweetalert2";
 
 const AssetAdd = () => {
   // 변수 선언
-  const { globalMenuval, setGlobalMenuval } = useContext(GlobalMenu);
+  const { selectedMenu, setSelectedMenu } = useContext(GlobalContext);
+  const { onClose } = useOutletContext();
   const navigate = useNavigate();
   const [asitem, setAsitem] = useState({itemdcd : "02",  acdid : "",  anm : "", mcorp : "", myear : "", astate :  "01", acorpcd : "01021000", aplace : "골드CC", apart : "", auser : "", spec : "CPU: / RAM: / VGA: / SSD: / HDD:", attr1 : "", attr2 : "", attr3 : "", attr4 : "", attr5 : "", price : "", iyear : "", regip : '""', regid : ''});
 
 
   // 렌더링 부분
   useEffect(() => {
-    setGlobalMenuval('전산관리 - 전산자산등록');
+    setSelectedMenu('전산관리 - 전산자산등록');
     ipcheck();
   }, []);
 
@@ -41,7 +42,7 @@ const AssetAdd = () => {
     .then((response) => {
       // console.log(JSON.stringify(response.data));
       // console.log(response.data);
-
+      Swal.fire({ title: "신규등록 하였습니다.", icon: "success", draggable: true });
       navigate('/main/asset');
     })
     .catch((err) => {
@@ -183,7 +184,7 @@ const AssetAdd = () => {
           <div className="flex flex-wrap justify-between mt-8 gap-4">
             <div className="flex gap-4">
               <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" onClick={assetadd} >저장</button>
-              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600" >목록</button>
+              <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600" onClick={onClose}>닫기</button>
             </div>
           </div>
         </div>
