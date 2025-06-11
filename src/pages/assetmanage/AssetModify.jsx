@@ -1,28 +1,50 @@
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
-import { GlobalContext } from "../main/GlobalContext";
 import Swal from "sweetalert2";
-
+import AssetHistorymodal from './AssetHistorymodal';
+import Modal from 'react-modal';
 
 const AssetModify = () => {
   // 변수 선언
-  const { selectedMenu, setSelectedMenu } = useContext(GlobalContext);
   const { onClose } = useOutletContext();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {num} = useParams();
   const [asdetail, setAsdetail] = useState();
-  const [pirce, setPrice] = useState('0');
+  const [asdetailhistory, setAsdetailhistory] = useState([]);
+  const price = asdetail ? parseInt(asdetail.price, 10).toLocaleString() : '';
+
+  // 공통 CSS 클래스
+  const flexClass = 'flex items-center mb-2 text-sm';
+  const labelClass = "w-28 text-center pr-4 font-semibold";
+  const inputClass = "flex-1 px-2 py-1 border rounded w-full";
+  const sinputClass = "flex-1 border rounded ";
+  const selectClass = 'px-2 py-1 w-full';
+
+  // 모달 CSS
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
 
   // 렌더링 부분
   useEffect(() => {
-    setSelectedMenu("전산상세보기");
+    // setSelectedMenu("전산상세보기");
     ipcheck();
     // console.log(asdetail);
   }, []);
 
   useEffect(() => {
     assetdetail();
+    ashistory();
   }, [num]);
 
   useEffect(() => {
@@ -43,7 +65,34 @@ const AssetModify = () => {
         // console.log(response.data);
         setAsdetail(response.data);
         // 원단위 표현
-        setPrice(response.data.price.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+        // setPrice(response.data.price.replace(/\B(?=(\d{3})+(?!\d))/g, ","));
+      })
+      .catch((err) => {
+        alert(err);
+      });
+  }
+
+  // 자산 히스토리도 같이요청
+  const ashistory  = async () => {
+    // alert('요청page'+page);
+    await axios
+      .get("/asset/detailhistory", {
+        params: {ano: num}
+      })
+      .then((response) => {
+        // console.log(response.data);
+        // object 에서 array로 만들기
+        let data = response.data;
+
+        if (!response.data) {
+          data = data;
+        } else if (!Array.isArray(response.data)) {
+          data = [data];
+        }
+
+        // console.log(data);
+
+        setAsdetailhistory(data);
       })
       .catch((err) => {
         alert(err);
@@ -83,27 +132,51 @@ const AssetModify = () => {
 
   // 함수 부분
   const handleAsdetail = (key, value) =>{
-    setAsdetail((prev) => ({ ...prev, [key]: value }));
+    // console.log('1/2 도달');
+    if (key === 'price' || key === 'iyear' || key === 'myear') {
+      let rawValue = '';
+      // console.log('value값 : ' + value);
+      if (key === 'price') {
+        rawValue = value.replace(/[^\d]/g, '');
+        // console.log('2/2 도달');
+        // console.log('rawValue값 : ' + rawValue);
+        setAsdetail((prev) => ({ ...prev, [key]: rawValue }));
+      }
+      if (/^\d*$/.test(value)) {
+        setAsdetail((prev) => ({ ...prev, [key]: value }));
+      }
+    } else {
+      setAsdetail((prev) => ({ ...prev, [key]: value }));
+    }
+
     // console.log(value);
   }
 
+  const handleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  }
 
+  function afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    subtitle.style.color = '#f00';
+  }
 
   return (
     <>
-      {asdetail && (
-        <div className="p-6 bg-white shadow-md rounded-lg w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6">
+      {asdetail && 
+      (
+        <div className="p-6 bg-white shadow-md rounded-lg">
+          <div className="grid grid-cols-2 gap-2">
 
-            <div>
-              <label className="block font-semibold mb-1">자산번호</label>
-              <div className="border px-3 py-2 rounded bg-gray-50">{num}</div>
+            <div className={flexClass}>
+              <label className={labelClass}>자산번호</label>
+              <div className={inputClass}>{num}</div>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산분류코드</label>
-              <div className="flex align-middle justify-center items-center border rounded">
-                <select name="itemdcd" className="w-full px-3 py-2" onChange={(e) => handleAsdetail('itemdcd', e.target.value)} value={asdetail.itemdcd}>
+            <div className={flexClass}>
+              <label className={labelClass}>자산분류코드</label>
+              <div className={sinputClass}>
+                <select className={selectClass} onChange={(e) => handleAsdetail('itemdcd', e.target.value)} value={asdetail.itemdcd}>
                   <option value="02">PC</option>
                   <option value="03">모니터</option>
                   <option value="31">노트북</option>
@@ -118,33 +191,33 @@ const AssetModify = () => {
                   <option value="32">렉</option>
                   <option value="29">기타</option>
                 </select>
-                <span className="align-middle justify-center items-center px-2 text-2xl text-gray-500">{asdetail.item4cd}</span>
+                {/* <span className="align-middle justify-center items-center px-2 text-2xl text-gray-500">{asdetail.item4cd}</span> */}
               </div>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산코드</label>
-              <input name="acdid" maxLength="50" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('acdid', e.target.value)} value={asdetail.acdid}/>
+            <div className={flexClass}>
+              <label className={labelClass}>자산코드</label>
+              <input maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('acdid', e.target.value)} value={asdetail.acdid}/>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산명</label>
-              <input name="anm" maxLength="50" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('anm', e.target.value)} value={asdetail.anm} />
+            <div className={flexClass}>
+              <label className={labelClass}>자산명</label>
+              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('anm', e.target.value)} value={asdetail.anm} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">제조사</label>
-              <input name="mcorp" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('mcorp', e.target.value)} value={asdetail.mcorp}/>
+            <div className={flexClass}>
+              <label className={labelClass}>제조사</label>
+              <input name="mcorp" maxLength="20" className={inputClass} onChange={(e) => handleAsdetail('mcorp', e.target.value)} value={asdetail.mcorp}/>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">제조년월</label>
-              <input name="myear" maxLength="8" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('myear', e.target.value)} value={asdetail.myear} />
+            <div className={flexClass}>
+              <label className={labelClass}>제조년월</label>
+              <input name="myear" maxLength="8" className={inputClass} onChange={(e) => handleAsdetail('myear', e.target.value)} value={asdetail.myear} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산상태</label>
-              <select name="astate" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('astate', e.target.value)} value={asdetail.astate} >
+            <div className={flexClass}>
+              <label className={labelClass}>자산상태</label>
+              <select name="astate" className={inputClass} onChange={(e) => handleAsdetail('astate', e.target.value)} value={asdetail.astate} >
                 <option value="01">사용중</option>
                 <option value="02">보유</option>
                 <option value="06">폐기</option>
@@ -155,23 +228,23 @@ const AssetModify = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">회사</label>
-              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('acorpcd', e.target.value)} value={asdetail.acorpcd}>
+            <div className={flexClass}>
+              <label className={labelClass}>회사</label>
+              <select className={inputClass} onChange={(e) => handleAsdetail('acorpcd', e.target.value)} value={asdetail.acorpcd}>
                 <option value="01021000">기흥관광개발(주)</option>
                 <option value="01031000">뉴경기관광(주)</option>
                 <option value="01041000">(주)지에이코리아</option>
                 <option value="01071000">(주)강호개발</option>
-                <option value="01091000">영농회사법인 그린팜주식회사</option>
+                <option value="01091000">그린팜</option>
                 {/* <option value="주식회사 지엠씨">주식회사 지엠씨</option> */}
                 {/* <option value="(주)유성 본점">(주)유성 본점</option> */}
                 {/* <option value="와이에스인베스트먼트(주)">와이에스인베스트먼트(주)</option> */}
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">설치장소</label>
-              <select name="aplace" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('aplace', e.target.value)} value={asdetail.aplace} >
+            <div className={flexClass}>
+              <label className={labelClass}>설치장소</label>
+              <select name="aplace" className={inputClass} onChange={(e) => handleAsdetail('aplace', e.target.value)} value={asdetail.aplace} >
                 <option>전체</option>
                 <option value="골드CC">골드CC</option>
                 <option value="코리아CC">코리아CC</option>
@@ -186,57 +259,74 @@ const AssetModify = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">귀속부서</label>
-              <input name="apart" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('apart', e.target.value)} value={asdetail.apart} />
+            <div className={flexClass}>
+              <label className={labelClass}>귀속부서</label>
+              <input name="apart" maxLength="20" className={inputClass} onChange={(e) => handleAsdetail('apart', e.target.value)} value={asdetail.apart} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">사용자</label>
-              <input name="auser" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('auser', e.target.value)} value={asdetail.auser} />
+            <div className={flexClass}>
+              <label className={labelClass}>사용자</label>
+              <input name="auser" maxLength="20" className={inputClass} onChange={(e) => handleAsdetail('auser', e.target.value)} value={asdetail.auser} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">성능</label>
-              <input name="spec" maxLength="100" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('spec', e.target.value)} value={asdetail.spec} />
+            <div className={flexClass}>
+              <label className={labelClass}>성능</label>
+              <input name="spec" maxLength="200" className={inputClass} onChange={(e) => handleAsdetail('spec', e.target.value)} value={asdetail.spec} />
             </div>
 
-            {[1, 2, 3, 4, 5].map((numb) => (
-              <div key={numb}>
-                <label className="block font-semibold mb-1">속성{numb}</label>
-                <input name={`attr${numb}`} maxLength="100" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail(`attr${numb}`, e.target.value)} value={asdetail[`attr${numb}`]} />
+            {[1, 2, 3].map((numb) => (
+              <div key={numb} className='flex col-span-2 items-center mb-2 text-sm'>
+                <label className={labelClass}>속성{numb}</label>
+                <input name={`attr${numb}`} maxLength="200" className={inputClass} onChange={(e) => handleAsdetail(`attr${numb}`, e.target.value)} value={asdetail[`attr${numb}`]} />
               </div>
             ))}
 
-            <div className="">
-              <label className="block  font-semibold mb-1">취득가액</label>
-              <div className="flex items-center border px-3 py-2 rounded bg-gray-50">
-                <input maxLength="100" className="text-right w-full" onChange={(e) => handleAsdetail('price', e.target.value)} value={asdetail.price} />
-                <span className="ml-2 text-gray-500 text-right">원</span>
+            {[4, 5].map((numb) => (
+              <div key={numb} className={flexClass}>
+                <label className={labelClass}>속성{numb}</label>
+                <input name={`attr${numb}`} maxLength="200" className={inputClass} onChange={(e) => handleAsdetail(`attr${numb}`, e.target.value)} value={asdetail[`attr${numb}`]} />
+              </div>
+            ))}
+
+            <div className={flexClass}>
+              <label className={labelClass}>취득가액</label>
+              <div className={sinputClass}>
+                <input maxLength="20" className={selectClass} onChange={(e) => handleAsdetail('price', e.target.value)} value={price} />
+                {/* <span className="ml-2 text-gray-500 text-right">원</span> */}
               </div>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">설치일자</label>
-              <input name="iyear" maxLength="8" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsdetail('iyear', e.target.value)} value={asdetail.iyear}/>
-              <span className="text-sm text-gray-500">예: 20250525</span>
-            </div>
-
-            <div className="col-span-1 md:col-span-3">
-              <label className="inline-flex items-center">
-                <input type="checkbox" className="mr-2" onChange={(e) => handleAsdetail('update', e.target.checked)}/>
-                체크 시 자산이력 등록
-              </label>
+            <div className={flexClass}>
+              <label className={labelClass}>설치일자</label>
+              <input name="iyear" maxLength="8" className={inputClass} onChange={(e) => handleAsdetail('iyear', e.target.value)} value={asdetail.iyear}/>
+              {/* <span className="text-sm text-gray-500">예: 20250525</span> */}
             </div>
           </div>
+
+          <div className={flexClass}>
+              <label className="w-full pt-10 inline-flex items-center text-center align-middle ">
+                <input type="checkbox" className="mr-2" onChange={(e) => handleAsdetail('update', e.target.checked)}/>
+                <span>체크 시 자산이력 등록</span>
+              </label>
+            </div>
 
           <div className="flex flex-wrap justify-between mt-8 gap-4">
             <div className="flex gap-4">
               <button className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700" onClick={assetmodify} >저장</button>
               <button className="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600" onClick={onClose}>닫기</button>
             </div>
-            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700">이력조회</button>
+            <button className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700" onClick={handleModal}>이력조회</button>
           </div>
+
+          <Modal
+            isOpen={isModalOpen}
+            onAfterOpen={afterOpenModal}
+            onRequestClose={handleModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <AssetHistorymodal detailhistory={asdetailhistory} modalclose={handleModal} />
+          </Modal>
         </div>
       )}
     </>

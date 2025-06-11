@@ -9,8 +9,15 @@ const AssetAdd = () => {
   const { selectedMenu, setSelectedMenu } = useContext(GlobalContext);
   const { onClose } = useOutletContext();
   const navigate = useNavigate();
-  const [asitem, setAsitem] = useState({itemdcd : "02",  acdid : "",  anm : "", mcorp : "", myear : "", astate :  "01", acorpcd : "01021000", aplace : "골드CC", apart : "", auser : "", spec : "CPU: / RAM: / VGA: / SSD: / HDD:", attr1 : "", attr2 : "", attr3 : "", attr4 : "", attr5 : "", price : "", iyear : "", regip : '""', regid : ''});
+  const [asitem, setAsitem] = useState({itemdcd : "02",  acdid : "",  anm : "", mcorp : "", myear : "", astate :  "01", acorpcd : "01021000", aplace : "골드CC", apart : "", auser : "", spec : "CPU: / RAM: / VGA: / SSD: / HDD:", attr1 : "", attr2 : "", attr3 : "", attr4 : "", attr5 : "", price : '0', iyear : "", regip : '', regid : ''});
+  const price = asitem ? parseInt(asitem.price, 10).toLocaleString() : '';
 
+  // 공통 CSS 클래스
+  const flexClass = 'flex items-center mb-2 text-sm';
+  const labelClass = "w-28 text-center pr-4 font-semibold";
+  const inputClass = "flex-1 px-2 py-1 border rounded w-full";
+  const sinputClass = "flex-2 border rounded ";
+  const selectClass = 'px-2 py-1 w-full';
 
   // 렌더링 부분
   useEffect(() => {
@@ -52,18 +59,34 @@ const AssetAdd = () => {
   
   // 함수 부분
   const handleAsitem = (key, value) =>{
-    setAsitem((prev) => ({ ...prev, [key]: value }));
-    console.log(value);
+    // console.log('1/2 도달');
+    if (key === 'price' || key === 'iyear' || key === 'myear') {
+      let rawValue = '';
+      // console.log('value값 : ' + value);
+      if (key === 'price') {
+        rawValue = value.replace(/[^\d]/g, '');
+        // console.log('2/2 도달');
+        // console.log('rawValue값 : ' + rawValue);
+        setAsitem((prev) => ({ ...prev, [key]: rawValue }));
+      }
+      if (/^\d*$/.test(value)) {
+        setAsitem((prev) => ({ ...prev, [key]: value }));
+      }
+    } else {
+      setAsitem((prev) => ({ ...prev, [key]: value }));
+    }
+
+    // console.log(value);
   }
 
     return (
         <>
           <div className="p-6 bg-white shadow-md rounded-lg w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
 
-            <div>
-              <label className="block font-semibold mb-1">자산분류코드</label>
-              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('item4nm', e.target.value)} value={asitem.item4nm}>
+            <div className={flexClass}>
+              <label className={labelClass}>자산분류코드</label>
+              <select className={inputClass} onChange={(e) => handleAsitem('item4nm', e.target.value)} value={asitem.item4nm}>
                 <option value="02">PC</option>
                 <option value="03">모니터</option>
                 <option value="31">노트북</option>
@@ -80,29 +103,29 @@ const AssetAdd = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산코드</label>
-              <input name="acdid" maxLength="50" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('acdid', e.target.value)} value={asitem.acdid}/>
+            <div className={flexClass}>
+              <label className={labelClass}>자산코드</label>
+              <input name="acdid" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('acdid', e.target.value)} value={asitem.acdid}/>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산명</label>
-              <input name="anm" maxLength="50" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('anm', e.target.value)} value={asitem.anm} />
+            <div className={flexClass}>
+              <label className={labelClass}>자산명</label>
+              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('anm', e.target.value)} value={asitem.anm} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">제조사</label>
-              <input name="mcorp" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('mcorp', e.target.value)} value={asitem.mcorp}/>
+            <div className={flexClass}>
+              <label className={labelClass}>제조사</label>
+              <input name="mcorp" maxLength="20" className={inputClass} onChange={(e) => handleAsitem('mcorp', e.target.value)} value={asitem.mcorp}/>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">제조년월</label>
-              <input name="myear" maxLength="8" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('myear', e.target.value)} value={asitem.myear} />
+            <div className={flexClass}>
+              <label className={labelClass}>제조년월</label>
+              <input name="myear" maxLength="8" className={inputClass} onChange={(e) => handleAsitem('myear', e.target.value)} value={asitem.myear} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">자산상태</label>
-              <select name="astate" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('statenm', e.target.value)} value={asitem.statenm} >
+            <div className={flexClass}>
+              <label className={labelClass}>자산상태</label>
+              <select name="astate" className={inputClass} onChange={(e) => handleAsitem('statenm', e.target.value)} value={asitem.statenm} >
                 <option value="01">사용중</option>
                 <option value="02">보유</option>
                 <option value="06">폐기</option>
@@ -113,23 +136,23 @@ const AssetAdd = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">회사</label>
-              <select className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('acorpcd', e.target.value)} value={asitem.acorpcd}>
+            <div className={flexClass}>
+              <label className={labelClass}>회사</label>
+              <select className={inputClass} onChange={(e) => handleAsitem('acorpcd', e.target.value)} value={asitem.acorpcd}>
                 <option value="01021000">기흥관광개발(주)</option>
                 <option value="01031000">뉴경기관광(주)</option>
                 <option value="01041000">(주)지에이코리아</option>
                 <option value="01071000">(주)강호개발</option>
-                <option value="01091000">영농회사법인 그린팜주식회사</option>
+                <option value="01091000">그린팜</option>
                 {/* <option value="주식회사 지엠씨">주식회사 지엠씨</option> */}
                 {/* <option value="(주)유성 본점">(주)유성 본점</option> */}
                 {/* <option value="와이에스인베스트먼트(주)">와이에스인베스트먼트(주)</option> */}
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">설치장소</label>
-              <select name="aplace" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('aplace', e.target.value)} value={asitem.aplace} >
+            <div className={flexClass}>
+              <label className={labelClass}>설치장소</label>
+              <select name="aplace" className={inputClass} onChange={(e) => handleAsitem('aplace', e.target.value)} value={asitem.aplace} >
                 <option>전체</option>
                 <option value="골드CC">골드CC</option>
                 <option value="코리아CC">코리아CC</option>
@@ -144,40 +167,47 @@ const AssetAdd = () => {
               </select>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">귀속부서</label>
-              <input name="apart" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('apart', e.target.value)} value={asitem.apart} />
+            <div className={flexClass}>
+              <label className={labelClass}>귀속부서</label>
+              <input name="apart" maxLength="20" className={inputClass} onChange={(e) => handleAsitem('apart', e.target.value)} value={asitem.apart} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">사용자</label>
-              <input name="auser" maxLength="20" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('auser', e.target.value)} value={asitem.auser} />
+            <div className={flexClass}>
+              <label className={labelClass}>사용자</label>
+              <input name="auser" maxLength="20" className={inputClass} onChange={(e) => handleAsitem('auser', e.target.value)} value={asitem.auser} />
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">성능</label>
-              <input name="spec" maxLength="100" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('spec', e.target.value)} value={asitem.spec} />
+            <div className='flex col-span-2 items-center mb-2 text-sm'>
+              <label className={labelClass}>성능</label>
+              <input name="spec" maxLength="200" className={inputClass} onChange={(e) => handleAsitem('spec', e.target.value)} value={asitem.spec} />
             </div>
 
-            {[1, 2, 3, 4, 5].map((num) => (
-              <div key={num}>
-                <label className="block font-semibold mb-1">속성{num}</label>
-                <input name={`attr${num}`} maxLength="100" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem(`attr${num}`, e.target.value)} value={asitem[`attr${num}`]} />
+            {[1, 2, 3].map((num) => (
+              <div className='flex col-span-2 items-center mb-2 text-sm' key={num}>
+                <label className={labelClass}>속성{num}</label>
+                <input name={`attr${num}`} maxLength="200" className={inputClass} onChange={(e) => handleAsitem(`attr${num}`, e.target.value)} value={asitem[`attr${num}`]} />
               </div>
             ))}
 
-            <div>
-              <label className="block font-semibold mb-1">취득가액</label>
-              <div className="flex items-center bg-gray-50">
-                <input name="price" maxLength="8" className="w-full border rounded px-3 py-2 text-right" onChange={(e) => handleAsitem('price', e.target.value)} value={asitem.price}/>
-                <span className="ml-2 text-gray-500">원</span>
+            {[4, 5].map((num) => (
+              <div className={flexClass} key={num}>
+                <label className={labelClass}>속성{num}</label>
+                <input name={`attr${num}`} maxLength="200" className={inputClass} onChange={(e) => handleAsitem(`attr${num}`, e.target.value)} value={asitem[`attr${num}`]} />
+              </div>
+            ))}
+
+            <div className={flexClass}>
+              <label className={labelClass}>취득가액</label>
+              <div className={sinputClass}>
+                <input name="price" maxLength="20" className="w-full border rounded px-2 py-1 text-right" onChange={(e) => handleAsitem('price', e.target.value)} value={price}/>
+                {/* <span className="ml-2 text-gray-500">원</span> */}
               </div>
             </div>
 
-            <div>
-              <label className="block font-semibold mb-1">설치일자</label>
-              <input name="iyear" maxLength="8" className="w-full border rounded px-3 py-2" onChange={(e) => handleAsitem('iyear', e.target.value)} value={asitem.iyear}/>
-              <span className="text-sm text-gray-500">예: 20250525</span>
+            <div className={flexClass}>
+              <label className={labelClass}>설치일자</label>
+              <input name="iyear" maxLength="8" className={inputClass} onChange={(e) => handleAsitem('iyear', e.target.value)} value={asitem.iyear}/>
+              {/* <span className="text-sm text-gray-500">예: 20250525</span> */}
             </div>
           </div>
 

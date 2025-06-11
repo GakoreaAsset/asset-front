@@ -7,6 +7,9 @@ const AssetSearch = ({onSearch}) => {
   const { asSearch, setAsSearch } = useContext(GlobalContext);
   const navigate = useNavigate();
 
+  const spanClass = 'font-bold pr-2 w-22 text-center text-sm';
+  const inputClass = 'border border-gray-300 rounded w-52 h-6 md:h-8 text-sm';
+
   // 렌더링 부분
 
   // Axios 요청부분
@@ -18,11 +21,11 @@ const AssetSearch = ({onSearch}) => {
   };
 
   return (
-    <div className="flex justify-center align-middle">
-      <div className="grid grid-cols-1 lg:grid-cols-6 w-screen pl-3 bg-gray-50 rounded shadow">
-        <div className="flex items-center">
-          <span className="font-bold text-sm pr-2">자산구분</span>
-          <select name="itemdcd" className=" border border-gray-300 rounded text-sm" onChange={(e) => handleSearch('itemdcd', e.target.value)} value={asSearch.itemdcd} >
+    <div className="flex justify-center align-middle h-full bg-gray-50 rounded shadow">
+      <div className="grid grid-cols-1 md:grid-cols-5 w-screen pl-3 gap-3 md:gap-0 mt-2 md:mt-0"> 
+        <div className="flex items-center max-sm:hidden">
+          <span className={spanClass}>자산구분</span>
+          <select name="itemdcd" className={inputClass} onChange={(e) => handleSearch('itemdcd', e.target.value)} value={asSearch.itemdcd} >
             <option value="">전체</option>
             <option value="02">PC</option>
             <option value="03">모니터</option>
@@ -40,24 +43,24 @@ const AssetSearch = ({onSearch}) => {
           </select>
         </div>
 
-        <div className="flex items-center">
-          <span className="font-bold text-sm pr-2">회사</span>
-          <select className="border border-gray-300 rounded text-sm" onChange={(e) => handleSearch('acorpcd', e.target.value)} value={asSearch.acorpcd}>
+        <div className="flex items-center max-sm:hidden">
+          <span className={spanClass}>회사</span>
+          <select className={inputClass} onChange={(e) => handleSearch('acorpcd', e.target.value)} value={asSearch.acorpcd}>
             <option value="">전체</option>
             <option value="01021000">기흥관광개발(주)</option>
             <option value="01031000">뉴경기관광(주)</option>
             <option value="01041000">(주)지에이코리아</option>
             <option value="01071000">(주)강호개발</option>
-            <option value="01091000">영농회사법인 그린팜주식회사</option>
+            <option value="01091000">그린팜</option>
             {/* <option value="주식회사 지엠씨">주식회사 지엠씨</option> */}
             {/* <option value="(주)유성 본점">(주)유성 본점</option> */}
             {/* <option value="와이에스인베스트먼트(주)">와이에스인베스트먼트(주)</option> */}
           </select>
         </div>
 
-        <div className="flex items-center">
-          <span className="font-bold text-sm pr-2">설치장소</span>
-            <select className="border border-gray-300 rounded text-sm" onChange={(e) => handleSearch('aplace', e.target.value)} value={asSearch.aplace} >
+        <div className="flex items-center max-sm:hidden">
+          <span className={spanClass}>설치장소</span>
+            <select className={inputClass} onChange={(e) => handleSearch('aplace', e.target.value)} value={asSearch.aplace} >
               <option value="">전체</option>
               <option value="골드CC">골드CC</option>
               <option value="코리아CC">코리아CC</option>
@@ -72,9 +75,9 @@ const AssetSearch = ({onSearch}) => {
             </select>
         </div>
 
-        <div className="flex items-center">
-          <span className="font-bold text-sm pr-2">상태</span>
-          <select className="border border-gray-300 rounded text-sm" onChange={(e) => handleAsitem('astate', e.target.value)} value={asSearch.astate} >
+        <div className="flex items-center max-sm:hidden">
+          <span className={spanClass}>상태</span>
+          <select className={inputClass} onChange={(e) => handleSearch('astate', e.target.value)} value={asSearch.astate} >
             <option value="">전체</option>
             <option value="01">사용중</option>
             <option value="02">보유</option>
@@ -88,21 +91,19 @@ const AssetSearch = ({onSearch}) => {
 
         <div className="flex items-center">
           <span className="pr-2">
-            <select className=" border border-gray-300 rounded text-sm" onChange={(e) => handleSearch('searchtitle', e.target.value)} value={asSearch.searchtitle}  >
-              <option value="auser">사용자</option>
+            <select className={spanClass} onChange={(e) => handleSearch('searchtitle', e.target.value)} value={asSearch.searchtitle}  >
               <option value="ano">자산번호</option>
+              <option value="auser">사용자</option>
               <option value="anm">자산명</option>
             </select>
           </span>
-          <input type="text" className=" border border-gray-300 rounded text-sm" onChange={(e) => handleSearch('searchbody', e.target.value)} value={asSearch.searchbody} />
+          <input type="text"className={inputClass} onChange={(e) => handleSearch('searchbody', e.target.value)} value={asSearch.searchbody} />
         </div>
 
-        <div className="items-center justify-center text-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-1 rounded" onClick={onSearch} >
-            검색
-          </button>
-        </div>
       </div>
+        <div className="text-center items-center justify-center align-middle py-1">
+          <button className="bg-blue-600 hover:bg-blue-700 text-white w-14  px-3 py-1 mr-3 rounded" onClick={onSearch} >검색</button>
+        </div>
     </div>
   )
 }

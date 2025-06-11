@@ -6,10 +6,10 @@ export const GlobalProvider = ({ children }) => {
 
   // 여러 개의 전역 상태 선언
   const [selectedMenu, setSelectedMenu] = useState("home");
-  const [asSearch, setAsSearch] = useState({itemdcd : "", acorpcd : "", aplace : "", astate : "01", searchtitle : "auser", searchbody: ""});
+  const [asSearch, setAsSearch] = useState({itemdcd : "", acorpcd : "", aplace : "", astate : "01", searchtitle : "ano", searchbody: ""});
   
   return (
-    <GlobalContext.Provider
+    <GlobalContext
       value={{
         selectedMenu,
         setSelectedMenu,
@@ -18,6 +18,6 @@ export const GlobalProvider = ({ children }) => {
       }}
     >
       {children}
-    </GlobalContext.Provider>
+    </GlobalContext>
   );
 };

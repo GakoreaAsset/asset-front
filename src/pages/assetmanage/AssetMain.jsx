@@ -31,6 +31,7 @@ const AssetMain = () => {
       })
       .then((response) => {
         // console.log(JSON.stringify(response.data));
+        // console.log(response.data);
         setAslist(response.data);
       })
       .catch((err) => {
@@ -69,18 +70,19 @@ const AssetMain = () => {
 
   return (
     <>
-      <div className="">
+      {/* <div className="h-52 lg:h-[40px]"> */}
+      <div className="h-9 lg:h-[40px]">
         <AssetSearch onSearch={handleSearchClick}/>
       </div>
       <div className="flex w-screen pt-2">
-        <div className="">
+        <div className="lg:w-[35%] md:w-[45%]">
           <AssetList             
             aslist={aslist} 
             asdata={asdata}
             setPage={setPage}
             page={page}/>
         </div>
-        <div className="pl-5">
+        <div className="lg:w-[65%] md:w-[55%] pl-5">
           <Outlet context={{ onClose: closePage }}/>
         </div>
       </div>
