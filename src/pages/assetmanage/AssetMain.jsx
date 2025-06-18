@@ -1,9 +1,10 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import AssetList from "./AssetList";
 import AssetSearch from "./AssetSearch";
-import { GlobalContext } from "../main/GlobalContext";
+import { GlobalContext } from "../util/GlobalContext";
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import api from "../util/api";
 
 // 검색과 목록의 컴포넌트를 개별화 하기위해 상위 컴포넌트의 메인에 필요 변수, 렌더링, 함수를 끌어올려 하위 컴포넌트로 나눠주고 있음
 const AssetMain = () => {
@@ -25,7 +26,7 @@ const AssetMain = () => {
 
   // Axios 요청부분
   const assetNum = async () => {
-    await axios
+    await api
       .post("/asset/pagenum", {
         itemdcd : asSearch.itemdcd, aplace : asSearch.aplace, astate : asSearch.astate, [asSearch.searchtitle] : asSearch.searchbody
       })
@@ -41,7 +42,7 @@ const AssetMain = () => {
 
   const assetList  = async () => {
     // alert('요청page'+page);
-    await axios
+    await api
       .post("/asset/page", {
         pageNumber : (page-1), itemdcd : asSearch.itemdcd, aplace : asSearch.aplace, astate : asSearch.astate, [asSearch.searchtitle] : asSearch.searchbody
       })

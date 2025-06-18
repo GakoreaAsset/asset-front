@@ -13,7 +13,7 @@ const AssetHistoryModal = ({detailhistory, modalclose}) => {
 
   return (
     <div>
-      {detailhistory ?
+      {detailhistory !== "[]" ?
         <table className="min-w-full border-collapse rounded-lg shadow-md">
           <thead>
             <tr className="bg-gray-100 text-xs text-gray-700 border-t border-b">

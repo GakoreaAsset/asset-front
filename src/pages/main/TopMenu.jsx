@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 
 import logo from '../../assets/img/gakorealogo.png'
 import { Link } from 'react-router-dom';
-import { GlobalContext } from './GlobalContext';
+import { GlobalContext } from '../util/GlobalContext';
 
 const TopMenu = () => {
   // 변수 선언

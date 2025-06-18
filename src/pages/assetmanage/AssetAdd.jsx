@@ -1,8 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
-import { GlobalContext } from "../main/GlobalContext";
+import { GlobalContext } from "../util/GlobalContext";
 import Swal from "sweetalert2";
+import api from "../util/api";
 
 const AssetAdd = () => {
   // 변수 선언
@@ -42,7 +43,7 @@ const AssetAdd = () => {
 
   // 신규등록
   const assetadd  = async () => {
-  await axios
+  await api
     .post("/asset/add",
       asitem
     )

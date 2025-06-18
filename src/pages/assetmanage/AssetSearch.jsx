@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { GlobalContext } from "../main/GlobalContext";
+import { GlobalContext } from "../util/GlobalContext";
 
 const AssetSearch = ({onSearch}) => {
   // 변수 선언

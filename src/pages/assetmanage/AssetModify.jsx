@@ -4,6 +4,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AssetHistorymodal from './AssetHistorymodal';
 import Modal from 'react-modal';
+import api from "../util/api";
 
 const AssetModify = () => {
   // 변수 선언
@@ -12,7 +13,7 @@ const AssetModify = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const {num} = useParams();
   const [asdetail, setAsdetail] = useState();
-  const [asdetailhistory, setAsdetailhistory] = useState([]);
+  const [asdetailhistory, setAsdetailhistory] = useState();
   const price = asdetail ? parseInt(asdetail.price, 10).toLocaleString() : '';
 
   // 공통 CSS 클래스
@@ -56,7 +57,7 @@ const AssetModify = () => {
   // Axios 요청부분
   const assetdetail  = async () => {
     // alert('요청page'+page);
-    await axios
+    await api
       .get("/asset/detail", {
         params: {ano: num}
       })
@@ -75,7 +76,7 @@ const AssetModify = () => {
   // 자산 히스토리도 같이요청
   const ashistory  = async () => {
     // alert('요청page'+page);
-    await axios
+    await api
       .get("/asset/detailhistory", {
         params: {ano: num}
       })
@@ -83,11 +84,15 @@ const AssetModify = () => {
         // console.log(response.data);
         // object 에서 array로 만들기
         let data = response.data;
+        // console.log(response.data);
+        // console.log(data);
 
-        if (!response.data) {
-          data = data;
-        } else if (!Array.isArray(response.data)) {
+        if (data === null || data === undefined || data === '') {
+          data = null;
+          console.log('변환안하는곳도달');
+        } else if (data !== null && data !== undefined && !Array.isArray(data)) {
           data = [data];
+          console.log('변환도달');
         }
 
         // console.log(data);
@@ -115,7 +120,7 @@ const AssetModify = () => {
 
   // 업데이트등록
   const assetmodify  = async () => {
-  await axios
+  await api
     .post("/asset/modify",
       asdetail
     )

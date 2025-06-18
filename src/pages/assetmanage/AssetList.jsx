@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import Pagination from "react-js-pagination";
 import { useNavigate, Link } from 'react-router-dom';
-import {GlobalContext} from '../main/GlobalContext';
+import {GlobalContext} from '../util/GlobalContext';
 
 
 
