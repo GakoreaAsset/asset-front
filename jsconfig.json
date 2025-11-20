@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./src", // 상대 경로의 기준점
+    "paths": {
+      "@/*": ["*"]
+    }
+  },
+  "include": ["src/**/*"]
+}

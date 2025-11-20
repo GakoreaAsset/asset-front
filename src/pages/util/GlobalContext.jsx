@@ -7,5 +7,10 @@ export const GlobalContext = createContext({
   asSearch: {},
   setAsSearch: () => {},
 
+  ipSearch: {},
+  setIpSearch: () => {},
+
+  swSearch: {},
+  setSwSearch: () => {},
 
 });

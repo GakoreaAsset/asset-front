@@ -7,6 +7,8 @@ export const GlobalProvider = ({ children }) => {
   // 여러 개의 전역 상태 선언
   const [selectedMenu, setSelectedMenu] = useState("home");
   const [asSearch, setAsSearch] = useState({itemdcd : "", acorpcd : "", aplace : "", astate : "01", searchtitle : "ano", searchbody: ""});
+  const [ipSearch, setIpSearch] = useState({ipaddr : "", usernm : "", deptnm : "", ipyn : ""});
+  const [swSearch, setSwSearch] = useState({itemdcd : "", apart : "", acorpcd : "", astate : "", lgubun : "", swno : "", pageNumber : ""});
   
   return (
     <GlobalContext
@@ -15,6 +17,10 @@ export const GlobalProvider = ({ children }) => {
         setSelectedMenu,
         asSearch,
         setAsSearch,
+        ipSearch,
+        setIpSearch,
+        swSearch,
+        setSwSearch,
       }}
     >
       {children}

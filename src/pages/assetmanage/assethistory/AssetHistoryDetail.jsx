@@ -4,9 +4,9 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AssetHistorymodal from './AssetHistorymodal';
 import Modal from 'react-modal';
-import api from "../util/api";
+import api from "../../util/api";
 
-const AssetModify = () => {
+const AssetHistoryDetail = () => {
   // 변수 선언
   const { onClose } = useOutletContext();
   const navigate = useNavigate();
@@ -22,19 +22,6 @@ const AssetModify = () => {
   const inputClass = "flex-1 px-2 py-1 border rounded w-full";
   const sinputClass = "flex-1 border rounded ";
   const selectClass = 'px-2 py-1 w-full';
-
-  // 모달 CSS
-  const customStyles = {
-    content: {
-      top: '50%',
-      left: '50%',
-      right: 'auto',
-      bottom: 'auto',
-      marginRight: '-50%',
-      transform: 'translate(-50%, -50%)',
-    },
-  };
-
 
   // 렌더링 부분
   useEffect(() => {
@@ -170,8 +157,8 @@ const AssetModify = () => {
     <>
       {asdetail && 
       (
-        <div className="p-6 bg-white shadow-md rounded-lg">
-          <div className="grid grid-cols-2 gap-2">
+        <div className="max-sm:p-1 p-6 bg-white shadow-md rounded-lg">
+          <div className="grid max-sm:grid-cols-1 grid-cols-2 gap-2">
 
             <div className={flexClass}>
               <label className={labelClass}>자산번호</label>
@@ -201,13 +188,13 @@ const AssetModify = () => {
             </div>
 
             <div className={flexClass}>
-              <label className={labelClass}>자산코드</label>
-              <input maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('acdid', e.target.value)} value={asdetail.acdid}/>
+              <label className={labelClass}>자산명</label>
+              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('anm', e.target.value)} value={asdetail.anm} />
             </div>
 
             <div className={flexClass}>
-              <label className={labelClass}>자산명</label>
-              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('anm', e.target.value)} value={asdetail.anm} />
+              <label className={labelClass}>제품코드</label>
+              <input maxLength="50" className={inputClass} onChange={(e) => handleAsdetail('acdid', e.target.value)} value={asdetail.acdid}/>
             </div>
 
             <div className={flexClass}>
@@ -280,7 +267,7 @@ const AssetModify = () => {
             </div>
 
             {[1, 2, 3].map((numb) => (
-              <div key={numb} className='flex col-span-2 items-center mb-2 text-sm'>
+              <div key={numb} className='flex md:col-span-2 items-center mb-2 text-sm'>
                 <label className={labelClass}>속성{numb}</label>
                 <input name={`attr${numb}`} maxLength="200" className={inputClass} onChange={(e) => handleAsdetail(`attr${numb}`, e.target.value)} value={asdetail[`attr${numb}`]} />
               </div>
@@ -327,7 +314,6 @@ const AssetModify = () => {
             isOpen={isModalOpen}
             onAfterOpen={afterOpenModal}
             onRequestClose={handleModal}
-            style={customStyles}
             contentLabel="Example Modal"
           >
             <AssetHistorymodal detailhistory={asdetailhistory} modalclose={handleModal} />
@@ -338,4 +324,4 @@ const AssetModify = () => {
   );
 }
 
-export default AssetModify;
+export default AssetHistoryDetail;

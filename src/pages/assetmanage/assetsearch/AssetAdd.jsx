@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
-import { GlobalContext } from "../util/GlobalContext";
+import { GlobalContext } from "../../util/GlobalContext";
 import Swal from "sweetalert2";
-import api from "../util/api";
+import api from "../../util/api";
 
 const AssetAdd = () => {
   // 변수 선언
@@ -43,19 +43,33 @@ const AssetAdd = () => {
 
   // 신규등록
   const assetadd  = async () => {
-  await api
-    .post("/asset/add",
-      asitem
-    )
-    .then((response) => {
-      // console.log(JSON.stringify(response.data));
-      // console.log(response.data);
-      Swal.fire({ title: "신규등록 하였습니다.", icon: "success", draggable: true });
-      navigate('/main/asset');
-    })
-    .catch((err) => {
-      alert(err);
-    });
+    // 자산명, 귀속부서, 사용자 필수값3개 없으면 리턴되게 설정
+    if (asitem.acdid === null || asitem.acdid === "" || asitem.acdid === undefined ) {
+      Swal.fire({ title: "자산명을 채워주세요", icon: "error", draggable: true, timer: 2000 });
+      return;
+    }
+    if (asitem.apart === null || asitem.apart === "" || asitem.apart === undefined ) {
+      Swal.fire({ title: "귀속부서를 채워주세요", icon: "error", draggable: true, timer: 2000 });
+      return;
+    }
+    if (asitem.auser === null || asitem.auser === "" || asitem.auser === undefined ) {
+      Swal.fire({ title: "사용자를 채워주세요", icon: "error", draggable: true, timer: 2000 });
+      return;
+    }
+
+    await api
+      .post("/asset/add",
+        asitem
+      )
+      .then((response) => {
+        // console.log(JSON.stringify(response.data));
+        // console.log(response.data);
+        Swal.fire({ title: "신규등록 하였습니다.", icon: "success", draggable: true, timer: 2000 });
+        navigate('/main/asset');
+      })
+      .catch((err) => {
+        Swal.fire({ title: "잠시후 다시 등록해주세요", icon: "warning", draggable: true, timer: 2000 });
+      });
   }
   
   // 함수 부분
@@ -83,7 +97,9 @@ const AssetAdd = () => {
     return (
         <>
           <div className="p-6 bg-white shadow-md rounded-lg w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-2">
+          <div className="grid max-sm:grid-cols-1 grid-cols-2 gap-2">
+
+            <div className="items-center align-middle text-center lg:hidden">전산-신규등록</div>
 
             <div className={flexClass}>
               <label className={labelClass}>자산분류코드</label>
@@ -105,13 +121,13 @@ const AssetAdd = () => {
             </div>
 
             <div className={flexClass}>
-              <label className={labelClass}>자산코드</label>
-              <input name="acdid" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('acdid', e.target.value)} value={asitem.acdid}/>
+              <label className={labelClass}>자산명</label>
+              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('anm', e.target.value)} value={asitem.anm} />
             </div>
 
             <div className={flexClass}>
-              <label className={labelClass}>자산명</label>
-              <input name="anm" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('anm', e.target.value)} value={asitem.anm} />
+              <label className={labelClass}>제품코드</label>
+              <input name="acdid" maxLength="50" className={inputClass} onChange={(e) => handleAsitem('acdid', e.target.value)} value={asitem.acdid}/>
             </div>
 
             <div className={flexClass}>
@@ -178,13 +194,13 @@ const AssetAdd = () => {
               <input name="auser" maxLength="20" className={inputClass} onChange={(e) => handleAsitem('auser', e.target.value)} value={asitem.auser} />
             </div>
 
-            <div className='flex col-span-2 items-center mb-2 text-sm'>
+            <div className='flex lg:col-span-2 items-center mb-2 text-sm'>
               <label className={labelClass}>성능</label>
               <input name="spec" maxLength="200" className={inputClass} onChange={(e) => handleAsitem('spec', e.target.value)} value={asitem.spec} />
             </div>
 
             {[1, 2, 3].map((num) => (
-              <div className='flex col-span-2 items-center mb-2 text-sm' key={num}>
+              <div className='flex lg:col-span-2 items-center mb-2 text-sm' key={num}>
                 <label className={labelClass}>속성{num}</label>
                 <input name={`attr${num}`} maxLength="200" className={inputClass} onChange={(e) => handleAsitem(`attr${num}`, e.target.value)} value={asitem[`attr${num}`]} />
               </div>

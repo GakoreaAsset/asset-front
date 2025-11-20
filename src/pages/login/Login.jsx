@@ -1,6 +1,6 @@
 import {useNavigate} from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+import Swal from "sweetalert2";
 import api from '../util/api';
 
 // 초기 로그인 페이지
@@ -19,6 +19,7 @@ const Login = () => {
       setUserId(savedUser);
       setSaveId(true); // 체크박스 자동으로 체크
     }
+    
   }, [])
 
   // Axios 요청
@@ -30,16 +31,14 @@ const Login = () => {
     })
     .then((response) => {
       console.log(JSON.stringify(response.data));
-      if (response.data) {
-          // 전역변수 또는 세션스토리지 토큰값 지정
-          
-
+      if (response.data) {         
           // 얼럿창 뜨고나서 메인(자산관리)으로 이동
-          alert('로그인 성공');
-          navigate('/main/asset');
+          // alert('로그인 성공');
+          navigate('/main');
       }
       else {
         // alert('아이디 또는 패스워드를 확인해주세요');
+        Swal.fire({ title: "아이디 또는 패스워드를 확인해주세요", icon: "error", draggable: true, timer: 1500, width: '40em' });
         if (saveId === false) {
           setUserId('');
         }
@@ -47,7 +46,8 @@ const Login = () => {
       }
     })
     .catch((err) => {
-      alert(err);
+      // alert(err);
+      Swal.fire({ title: "아이디 또는 패스워드를 확인해주세요", icon: "error", draggable: true, timer: 1500, width: '40em' });
       if (saveId === false) {
         setUserId('');
       }
