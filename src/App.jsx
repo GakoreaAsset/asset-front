@@ -3,6 +3,7 @@
 // 연결 사용 하는 라이브러리
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { GlobalProvider } from './pages/util/GlobalProvider.jsx';
+import { setupApiInterceptor } from '@/pages/api/apiInterceptor.jsx';
 
 // 연결된 페이지 및 CSS
 import './App.css';
@@ -23,11 +24,12 @@ import IpModify from './pages/assetmanage/ipmanage/IpModify.jsx';
 import SwModify from './pages/assetmanage/swlicense/SwModify.jsx';
 import SwAdd from './pages/assetmanage/swlicense/SwAdd.jsx';
 
+setupApiInterceptor();
 
 export default function App() {
   // 스프링부트 vscode 실행방법 터미널 -> ./gradlew bootRun
   // 스윗얼럿2 사용방법 https://sweetalert2.github.io/#usage 설치 npm i sweetalert2
-
+  
   return (
     <>
       <GlobalProvider>

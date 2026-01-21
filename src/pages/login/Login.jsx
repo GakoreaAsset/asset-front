@@ -1,7 +1,7 @@
 import {useNavigate} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Swal from "sweetalert2";
-import api from '../util/api';
+import api from '../api/api';
 
 // 초기 로그인 페이지
 const Login = () => {

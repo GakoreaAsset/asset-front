@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../util/GlobalContext";
-import api from "../util/api";
+import api from "../api/api";
 
 const EmpUse = () => {
   // 변수 선언

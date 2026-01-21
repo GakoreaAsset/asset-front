@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../util/GlobalContext";
 import { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
-import api from "../../util/api";
+import api from "../../api/api";
 import { useIsMobile } from "../../util/useIsMobile";
 import IpList from "./IpList";
 import IpSearch from "./IpSearch";
@@ -61,7 +61,8 @@ const IpMain = () => {
   
   // 함수 부분
   // 검색 옵션 변경
-    const handleSearchClick = () => {
+  const handleSearchClick = (e) => {
+    e.preventDefault();
     ipNum();
     ipList();
   };

@@ -4,7 +4,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AssetHistorymodal from './AssetHistorymodal';
 import Modal from 'react-modal';
-import api from "../../util/api";
+import api from "../../api/api";
 
 const AssetModify = () => {
   // 변수 선언
@@ -14,7 +14,7 @@ const AssetModify = () => {
   const {num} = useParams();
   const [asdetail, setAsdetail] = useState();
   const [asdetailhistory, setAsdetailhistory] = useState();
-  const price = asdetail ? parseInt(asdetail.price, 10).toLocaleString() : '0';
+  const price = asdetail ? parseInt(asdetail.price, 10).toLocaleString() : '0`';
 
   // 공통 CSS 클래스
   const flexClass = 'flex items-center mb-2 text-sm';

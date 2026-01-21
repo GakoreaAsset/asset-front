@@ -4,7 +4,7 @@ import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import AssetHistorymodal from './AssetHistorymodal';
 import Modal from 'react-modal';
-import api from "../../util/api";
+import api from "../../api/api";
 
 const AssetHistoryDetail = () => {
   // 변수 선언

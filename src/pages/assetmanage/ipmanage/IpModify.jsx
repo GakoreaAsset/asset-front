@@ -2,7 +2,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-import api from "../../util/api";
+import api from "../../api/api";
 import { GlobalContext } from "../../util/GlobalContext";
 
 const IpModify = () => {

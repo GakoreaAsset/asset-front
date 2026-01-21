@@ -4,7 +4,7 @@ import AssetSearch from "./AssetSearch";
 import { GlobalContext } from "../util/GlobalContext";
 import { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
-import api from "../util/api";
+import api from "../api/api";
 
 Modal.setAppElement("#root");
 

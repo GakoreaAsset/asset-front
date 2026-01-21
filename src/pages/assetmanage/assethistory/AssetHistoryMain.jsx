@@ -2,7 +2,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { GlobalContext } from "../../util/GlobalContext";
 import { useContext, useEffect, useState } from "react";
 import Modal from "react-modal";
-import api from "../../util/api";
+import api from "../../api/api";
 import { useIsMobile } from "../../util/useIsMobile";
 
 Modal.setAppElement("#root");

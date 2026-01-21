@@ -3,7 +3,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import { GlobalContext } from "../../util/GlobalContext";
 import Swal from "sweetalert2";
-import api from "../../util/api";
+import api from "../../api/api";
 
 const SwAdd = () => {
   // 변수 선언
